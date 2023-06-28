@@ -30,8 +30,6 @@ public class AndroidCloud implements IDevice{
 
         AppiumDriver driver= null;
         try {
-            System.out.println("http://" + user + ":" + accessKey + "@hub-cloud.browserstack"
-                    + ".com/wd/hub");
             driver = new AndroidDriver(new URL("http://" + user + ":" + accessKey + "@hub-cloud.browserstack.com/wd/hub"), capabilities);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);

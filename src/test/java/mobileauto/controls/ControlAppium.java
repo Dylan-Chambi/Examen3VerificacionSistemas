@@ -1,8 +1,8 @@
 package mobileauto.controls;
 
+import mobileauto.session.Session;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import session.Session;
 
 public class ControlAppium {
     protected WebElement control;

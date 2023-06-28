@@ -1,11 +1,10 @@
-package restapi.tests.createUserToken;
+package restapi.tests.createUpdateUser;
 
 import io.restassured.response.Response;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import restapi.factoryRequest.FactoryRequest;
 import restapi.factoryRequest.RequestInfo;
-import utils.JsonUtil;
 import utils.Properties;
 
 import java.io.FileNotFoundException;
@@ -14,7 +13,7 @@ import java.util.Date;
 
 import static org.hamcrest.Matchers.equalTo;
 
-public class createUserToken {
+public class CreateUpdateUserTest {
 
     RequestInfo requestInfo = new RequestInfo();
 
@@ -56,18 +55,19 @@ public class createUserToken {
 
         requestInfo.setHeader("Authorization", null);
 
-        // crear proyecto
+        // atualizar usuario
+        JSONObject updateUserBody = new JSONObject();
+        String newFullName = "Dylan Chambi Updated";
 
-        JSONObject createProjectBody = JsonUtil.getJSONFromFile("src/test/resources/JSONS/CreateProject.json");
+        updateUserBody.put("FullName", newFullName);
 
-        requestInfo.setHost(Properties.apiHost + "/projects.json").setBody(createProjectBody.toString()).setHeader("Token", token);
-        response = FactoryRequest.make("post").send(requestInfo);
+        requestInfo.setHost(Properties.apiHost + "/user/0.json").setBody(updateUserBody.toString()).setHeader("Token", token);
+        response = FactoryRequest.make("put").send(requestInfo);
         response.then()
                 .log().all()
                 .statusCode(200)
-                //TODO: Verificacion crear proyecto
-                .body("Content", equalTo(createProjectBody.get("Content")))
-                .body("Icon", equalTo(createProjectBody.get("Icon")));
+                //TODO: Verificacion actualizar usuario
+                .body("FullName", equalTo(newFullName));
 
         // eliminar token
         requestInfo.setHost(Properties.apiHost + "/authentication/token.json").setHeader("Token", token);
@@ -76,16 +76,20 @@ public class createUserToken {
                 .log().all()
                 .statusCode(200);
 
-        // intentar crear proyecto
+        // intentar actualizar usuario
+        JSONObject updateUserBodyAgain = new JSONObject();
+        String anotherNewFullName = "Dylan Chambi Updated Again";
 
-        requestInfo.setHost(Properties.apiHost + "/projects.json").setBody(createProjectBody.toString()).setHeader("Token", token);
-        response = FactoryRequest.make("post").send(requestInfo);
+        updateUserBodyAgain.put("Name", anotherNewFullName);
+
+        requestInfo.setHost(Properties.apiHost + "/user/0.json").setBody(updateUserBodyAgain.toString()).setHeader("Token", token);
+        response = FactoryRequest.make("put").send(requestInfo);
         response.then()
                 .log().all()
                 .statusCode(200)
-                //TODO: Verificacion que ya no se puede crear proyecto
-                .body("ErrorMessage", equalTo("Not Authenticated"))
-                .body("ErrorCode", equalTo(102));
+                //TODO: Verificar que ya no se puede actualizar el usuario
+        .body("ErrorMessage", equalTo("Not Authenticated"))
+        .body("ErrorCode", equalTo(102));
 
     }
 

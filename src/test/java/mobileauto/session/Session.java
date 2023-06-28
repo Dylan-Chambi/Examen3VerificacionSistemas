@@ -1,7 +1,7 @@
 package mobileauto.session;
 
-import devices.FactoryDevices;
 import io.appium.java_client.AppiumDriver;
+import mobileauto.devices.FactoryDevices;
 import utils.GetEnvironment;
 
 public class Session {
